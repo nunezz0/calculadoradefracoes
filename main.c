@@ -1,49 +1,126 @@
-/* Um lojista atribui o preço de venda dos itens de sualoja com um número
-racional (uma fração de inteiros).Este comerciante precisa de uma calculadora capaz derealizar as
-operações de soma, subtração,multiplicação e divisão de frações, a qual exibe oresultado como uma fração
- na forma mais simplificadapossível.
-Desenvolva um programa que implementeesta calculadora. */
-
 #include <stdio.h>
-//biblioteca para realizar operações de entrada e saída.
+#include <stdlib.h>
 
-int main(){
-    double numerador1, denominador1, numerador2, denominador2; //Utilizando o tipo "double" para que os cálculos funcionem com melhor precisão, pois é mais adequado para as operações matemáticas utilizadas no programa.
-    char operador; //Palavra reservada para armazenar os operadores (+, -, *, /) solicitados. 
-    double resultado; //Armazenamento dos resultados calculados.
+void obter_fracoes();
+void somar_fracoes(int x, int y, int u, int v);
+void subtrair_fracoes(int x, int y, int u, int v);
+void multiplicar_fracoes(int x, int y, int u, int v);
+void dividir_fracoes(int x, int y, int u, int v);
+void simplificar_fracao(int x, int y);
 
-    printf("Digite o numerador da primeira fracao: "); //Solicitando o primeiro numerador e o primeiro denomiador.
-    scanf("%lf", &numerador1);// "lf" utilizado para ler o valor inserido e armazenar.
-    printf("Digite o denominador da primeira fracao: ");
-    scanf("%lf", &denominador1);
+int a, b, c, d;
 
-    printf("Escolha a operacao (+, -, *, /): "); //Solicitando um operador para realizar o cálculo desejado.
-    scanf(" %c", &operador); //"%c" para que seja possível a leitura do caractere do operador.
+int main() //Função principal
 
-    printf("Digite o numerador da segunda fracao: "); //Solicitando o segundo numerador e o segundo denomiador.
-    scanf("%lf", &numerador2);
-    printf("Digite o denominador da segunda fracao: ");
-    scanf("%lf", &denominador2);
+{
 
-    if (operador == '+') {  //"if" para controlar o fluxo de execução do programa.
-        resultado = (numerador1 / denominador1) + (numerador2 / denominador2);
-        printf("Resultado da soma: %.2f\n", resultado);
-    } else if (operador == '-') {
-        resultado = (numerador1 / denominador1) - (numerador2 / denominador2);
-        printf("Resultado da subtracao: %.2f\n", resultado);
-    } else if (operador == '*') {
-        resultado = (numerador1 / denominador1) * (numerador2 / denominador2);
-        printf("Resultado da multiplicacao: %.2f\n", resultado);
-    } else if (operador == '/') {
-        if (numerador2 != 0 && denominador2 != 0) { //Função para dividir as frações convertendo-as para números racionais.
-            resultado = (numerador1 / denominador1) / (numerador2 / denominador2);
-            printf("Resultado da divisao: %.2f\n", resultado); //"%.2f\n" para formatar a saída dos números.
-        } else {
-            printf("Erro: Divisao por zero nao é permitida.\n"); //Caso ocorra alguma divisão por zero.
+    char r; // Variável para armazenar a escolha do usuário
+
+    while (1) // Loop principal do programa
+
+    {
+        system("ClS"); //Limpa a tela (Específico Windows)
+
+//Menu de opções
+
+        printf("1. Somar\n");
+        printf("2. Subtrair\n");
+        printf("3. Multiplicar\n");
+        printf("4. Dividir\n");
+        printf("9. Fim\n");
+
+        r = getchar(); //Lê uma tecla do usuário sem precisar
+        if ( r == '9') // Sai do loop se a opção for 9
+            break;
+
+        obter_fracoes(); // Pede ao usuário que insira duas frações
+
+        switch (r) // Executa a operação conforme a escolha do usuário
+        {
+        case '1':
+            somar_fracoes(a, b, c, d);
+            break;
+        case '2':
+            subtrair_fracoes(a, b, c, d);
+            break;
+        case '3':
+            multiplicar_fracoes(a, b, c, d);
+            break;
+        case '4':
+            dividir_fracoes(a, b, c, d);
+            break;
         }
-    } else {
-        printf("Operador invalido!\n");//Mensagem caso o operador seja inválido.
     }
 
     return 0;
+
 }
+
+void obter_fracoes()
+{
+    printf("\n1a fracao: ");
+    scanf("%d %d", &a, &b);
+    printf("\n2a fracao: ");
+    scanf("%d %d", &c, &d);
+}
+
+void somar_fracoes(int x, int y, int u, int v) // Funçao para somar as duas frações (x/y) + (u/v)
+{
+    int n, d;
+    n = x * v + u * y;
+    d = y * v;
+    simplificar_fracao(n, d);
+}
+
+
+void subtrair_fracoes(int x, int y, int u, int v) // Funçao para subtrair as duas frações (x/y) - (u/v)
+{
+    int n, d;
+    n = x * v - u * y; // Subtração dos numeradores
+    d = y * v; // Subtração dos denominadores
+    simplificar_fracao(n, d);
+}
+
+void multiplicar_fracoes(int x, int y, int u, int v) // Funçao para multiplicar as duas frações (x/y) * (u/v)
+{
+    int n, d;
+    n = x * u; // Multiplica os numeradores
+    d = y * v; // Multiplica os denominadores
+    simplificar_fracao(n, d);
+}
+
+void dividir_fracoes(int x, int y, int u, int v) // Funçao para multiplicar as duas frações (x/y) / (u/v)
+{
+    int n, d;
+    n = x * u;
+    d = y * v;
+    simplificar_fracao(n, d);
+}
+
+int mdc(int x, int y)
+{
+
+    int r = 1;
+    while (r != 0)
+    {
+        r = x % y;
+        x = y;
+        d = y = r;
+    }
+
+    return x;
+
+}
+void simplificar_fracao(int x, int y)
+{
+    int m, n, d;
+    m = mdc(x, y);
+    n = x / m;
+    d = y / m;
+    printf("Resultado: %d / %d\n", n, d);
+    system("PAUSE");
+}
+
+
+
+
